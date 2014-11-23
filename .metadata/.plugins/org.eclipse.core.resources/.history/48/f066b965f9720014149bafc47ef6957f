@@ -1,0 +1,26 @@
+package com.example.gcm_client_test;
+
+import com.loopj.android.http.*;
+
+/**
+ * This class uses library that comes from http://loopj.com/android-async-http/
+ * 
+ * @author Jun
+ * 
+ */
+public class Http {
+	private String url;
+	private AsyncHttpClient client = new AsyncHttpClient();
+
+	public Http(String url) {
+		this.url = url;
+	}
+
+	public void get(JsonHttpResponseHandler handler) {
+		client.get(url, handler);
+	}
+	
+	public void register(String regId, JsonHttpResponseHandler handler){
+		client.get(url + "/reg" + "/" + regId, handler);
+	}
+}

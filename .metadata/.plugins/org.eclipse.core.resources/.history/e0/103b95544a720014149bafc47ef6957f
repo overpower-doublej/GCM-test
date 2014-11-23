@@ -1,0 +1,19 @@
+package com.example.httpclient_test;
+
+
+/**
+ * This class uses library that comes from
+ * http://loopj.com/android-async-http/
+ * @author Jun
+ *
+ */
+public class Http {
+	private String url;
+	private Asyn
+
+	public Http(String url) {
+		this.url = url;
+	}
+	
+	public void get
+}
