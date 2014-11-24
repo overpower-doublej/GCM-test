@@ -2,7 +2,9 @@ package com.example.gcm_client_test;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -43,10 +45,11 @@ public class MainActivity extends Activity {
 	 */
 	static final String TAG = "GCM Demo";
 
-	TextView mDisplay;
 	GoogleCloudMessaging gcm;
 	AtomicInteger msgId = new AtomicInteger();
 	Context context;
+
+	TextView txt;
 
 	String regid;
 
@@ -54,10 +57,11 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.main);
-		mDisplay = (TextView) findViewById(R.id.display);
 
+		Intent intent = getIntent();
+
+		txt = (TextView) findViewById(R.id.txt);
 		context = getApplicationContext();
 
 		// Check device for Play Services APK. If check succeeds, proceed with
@@ -69,19 +73,29 @@ public class MainActivity extends Activity {
 			if (regid.isEmpty()) {
 				registerInBackground();
 			} else {
-				Log.i(TAG, regid);
+				Log.i(TAG, "registration id: " + regid);
+				Bundle extras = intent.getExtras();
+				if (extras != null) {
+					// notification 매니저 생성
+					NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+					// 등록된 notification 을 제거 한다.
+					nm.cancel(7147);
+					println("Message from GCM: "
+							+ extras.getBundle("data").getString("msg"));
+				} else {
+					Http http = new Http(url);
 
-				Http http = new Http(url);
+					http.register(regid, new JsonHttpResponseHandler() {
+						@Override
+						public void onSuccess(int statusCode, Header[] headers,
+								JSONObject response) {
+							super.onSuccess(statusCode, headers, response);
 
-				http.register(regid, new JsonHttpResponseHandler() {
-					@Override
-					public void onSuccess(int statusCode, Header[] headers,
-							JSONObject response) {
-						super.onSuccess(statusCode, headers, response);
-
-						Log.i("jun", response.toString());
-					}
-				});
+							Log.i("jun", response.toString());
+							println(response.toString());
+						}
+					});
+				}
 			}
 		} else {
 			Log.i(TAG, "No valid Google Play Services APK found.");
@@ -185,11 +199,6 @@ public class MainActivity extends Activity {
 					msg = "Device registered, registration ID=" + regid;
 					Log.i("jun", msg);
 
-					// You should send the registration ID to your server over
-					// HTTP, so it
-					// can use GCM/HTTP or CCS to send messages to your app.
-					sendRegistrationIdToBackend();
-
 					// For this demo: we don't need to send it because the
 					// device will send
 					// upstream messages to a server that echo back the message
@@ -209,7 +218,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			protected void onPostExecute(String msg) {
-				mDisplay.append(msg + "\n");
+
 			}
 		}.execute(null, null, null);
 	}
@@ -217,33 +226,6 @@ public class MainActivity extends Activity {
 	// Send an upstream message.
 	public void onClick(final View view) {
 
-		if (view == findViewById(R.id.send)) {
-			new AsyncTask<Void, Void, String>() {
-				@Override
-				protected String doInBackground(Void... params) {
-					String msg = "";
-					try {
-						Bundle data = new Bundle();
-						data.putString("my_message", "Hello World");
-						data.putString("my_action",
-								"com.google.android.gcm.demo.app.ECHO_NOW");
-						String id = Integer.toString(msgId.incrementAndGet());
-						gcm.send(SENDER_ID + "@gcm.googleapis.com", id, data);
-						msg = "Sent message";
-					} catch (IOException ex) {
-						msg = "Error :" + ex.getMessage();
-					}
-					return msg;
-				}
-
-				@Override
-				protected void onPostExecute(String msg) {
-					mDisplay.append(msg + "\n");
-				}
-			}.execute(null, null, null);
-		} else if (view == findViewById(R.id.clear)) {
-			mDisplay.setText("");
-		}
 	}
 
 	@Override
@@ -276,14 +258,7 @@ public class MainActivity extends Activity {
 				Context.MODE_PRIVATE);
 	}
 
-	/**
-	 * Sends the registration ID to your server over HTTP, so it can use
-	 * GCM/HTTP or CCS to send messages to your app. Not needed for this demo
-	 * since the device sends upstream messages to a server that echoes back the
-	 * message using the 'from' address in the message.
-	 */
-	private void sendRegistrationIdToBackend() {
-		// Your implementation here.
-
+	public void println(String msg) {
+		txt.setText(txt.getText() + "\n" + msg);
 	}
 }

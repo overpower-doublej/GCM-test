@@ -14,6 +14,8 @@ public class Http {
 	private String url;
 	private AsyncHttpClient client = new AsyncHttpClient();
 
+	private final static String tag = "Http";
+
 	public Http(String url) {
 		this.url = url;
 	}
@@ -23,8 +25,14 @@ public class Http {
 	}
 
 	public void register(String regId, JsonHttpResponseHandler handler) {
-		String reqUrl = url + "/reg/" + regId;
-		client.get(reqUrl, handler);
-		Log.i("jun", "GET " + reqUrl);
+		// Setup request url
+		String reqUrl = url + "/reg";
+		// Setup post body
+		RequestParams params = new RequestParams();
+		params.put("regId", regId);
+		// Request
+		client.post(reqUrl, params, handler);
+
+		Log.i(tag, "POST " + reqUrl);
 	}
 }

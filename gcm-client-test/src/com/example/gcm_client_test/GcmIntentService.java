@@ -36,7 +36,7 @@ import android.util.Log;
  * wake lock.
  */
 public class GcmIntentService extends IntentService {
-	public static final int NOTIFICATION_ID = 1;
+	public static final int NOTIFICATION_ID = 7147;
 	private NotificationManager mNotificationManager;
 	NotificationCompat.Builder builder;
 
@@ -63,30 +63,23 @@ public class GcmIntentService extends IntentService {
 			 */
 			if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR
 					.equals(messageType)) {
-				sendNotification("Send error: " + extras.toString());
+				// sendNotification("Send error: " + extras.toString());
+				// Do nothing
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED
 					.equals(messageType)) {
-				sendNotification("Deleted messages on server: "
-						+ extras.toString());
-				// If it's a regular GCM message, do some work.
+				// sendNotification("Deleted messages on server: "
+				// + extras.toString());
+				// Do nothing
+
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE
 					.equals(messageType)) {
-				// This loop represents the service doing some work.
-				for (int i = 0; i < 5; i++) {
-					Log.i(TAG,
-							"Working... " + (i + 1) + "/5 @ "
-									+ SystemClock.elapsedRealtime());
-					try {
-						// Thread.sleep(5000);
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-					}
-				}
-				Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
+				// If it's a regular GCM message, do some work.
+				/*
+				 * @@@ REGULAR GCM MESSAGE HANDLER
+				 */
 				// Post notification of received message.
-				sendNotification("Received: " + extras.toString());
+				sendNotification(extras);
 				Log.i(TAG, "Received: " + extras.toString());
-				Log.i("jun", extras.getString("key1"));
 			}
 		}
 		// Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -96,16 +89,20 @@ public class GcmIntentService extends IntentService {
 	// Put the message into a notification and post it.
 	// This is just one simple example of what you might choose to do with
 	// a GCM message.
-	private void sendNotification(String msg) {
+	private void sendNotification(Bundle extras) {
+		String msg = extras.getString("msg");
+
 		mNotificationManager = (NotificationManager) this
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra("data", extras);
+
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				new Intent(this, MainActivity.class), 0);
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-				this).setSmallIcon(R.drawable.ic_stat_gcm)
-				.setContentTitle("GCM Notification")
+				this).setSmallIcon(R.drawable.ic_stat_gcm).setContentTitle(msg)
 				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
 				.setContentText(msg);
 

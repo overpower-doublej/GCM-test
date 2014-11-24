@@ -5,12 +5,9 @@
 <fullyQualifiedTypeName name="android.widget.Button"/>
 <fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
 <fullyQualifiedTypeName name="com.example.gcm_client_test.DemoActivity"/>
-<fullyQualifiedTypeName name="com.example.gcm_client_test.MainActivity"/>
-<fullyQualifiedTypeName name="com.google.android.gms.gcm.GoogleCloudMessaging"/>
 <fullyQualifiedTypeName name="com.loopj.android.http.AsyncHttpClient"/>
 <fullyQualifiedTypeName name="com.example.httpclient_test.Http"/>
 <fullyQualifiedTypeName name="com.loopj.android.http.AsyncHttpResponseHandler"/>
-<fullyQualifiedTypeName name="android.widget.TextView"/>
 <fullyQualifiedTypeName name="com.example.httpclient_test.R.id"/>
 <fullyQualifiedTypeName name="java.lang.Integer"/>
 <fullyQualifiedTypeName name="org.apache.http.Header"/>
@@ -20,5 +17,14 @@
 <fullyQualifiedTypeName name="com.example.gcm_client_test.Http"/>
 <fullyQualifiedTypeName name="com.loopj.android.http.JsonHttpResponseHandler"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="com.google.android.gms.gcm.GoogleCloudMessaging"/>
+<fullyQualifiedTypeName name="com.loopj.android.http.RequestParams"/>
+<fullyQualifiedTypeName name="com.example.gcm_client_test.R.id"/>
+<fullyQualifiedTypeName name="android.widget.TextView"/>
+<fullyQualifiedTypeName name="com.example.gcm_client_test.MainActivity"/>
+<fullyQualifiedTypeName name="android.content.Intent"/>
+<fullyQualifiedTypeName name="java.lang.Boolean"/>
 <fullyQualifiedTypeName name="android.os.Bundle"/>
+<fullyQualifiedTypeName name="android.app.PendingIntent"/>
+<fullyQualifiedTypeName name="android.app.NotificationManager"/>
 </qualifiedTypeNameHistroy>
